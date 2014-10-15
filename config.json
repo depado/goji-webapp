@@ -1,0 +1,8 @@
+{
+    "secret": "secret",
+    "database": {
+        "hosts": "localhost",
+        "database": "defaultproject"
+    },
+    "public_path": "./assets"
+}

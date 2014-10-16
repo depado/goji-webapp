@@ -6,12 +6,19 @@
   <title>Index</title>
   <link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="/static/css/semantic.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/monokai_sublime.min.css">
   <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="/static/js/semantic.min.js"></script>
+  <script src="/static/js/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
   <style type="text/css">
     body {
       font-family: 'Quicksand', sans-serif;
-      font-weight: 400
+      font-weight: 400;
+      background-image: url("/static/img/bg/footer_lodyas.png");
+      background-repeat:repeat;
     }
   </style>
   <!--[if lt IE 9]>
@@ -19,35 +26,42 @@
   <![endif]-->
 </head>
 <body class="Grid">
-  <div class="ui grid">
-    <div class="three wide column">
-      <div class="ui vertical menu">
-        <a class="active teal item">
-          Inbox
-          <div class="ui teal label">1</div>
-        </a>
-        <a class="item">
-          Spam
-          <div class="ui label">51</div>
-        </a>
-        <a class="item">
-          Updates
-          <div class="ui label">1</div>
-        </a>
-        <div class="item">
-          <div class="ui small icon input">
-            <input placeholder="Search mail..." type="text">
-            <i class="search icon"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="seven wide column">
-      
-    </div>
-    <div class="four wide column">
-      TOTOTOTOTOTO
-    </div>
+  <div class="ui raised segment">
+    <div class="ui teal ribbon label">Declare a model with MGO</div>
+      <pre>
+        <code class="go">
+type User struct {
+  ID        bson.ObjectId `bson:"_id,omitempty"`
+  Email     string        `bson:"e"`
+  Username  string        `bson:"u"`
+  Password  []byte        `bson:"p"`
+  Timestamp time.Time     `bson:"t"`
+}
+
+func (user *User) HashPassword(password string) {
+  hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+  if err != nil {
+    log.Fatalf("Couldn't hash password: %v", err)
+    panic(err)
+  }
+  user.Password = hash
+}    
+
+func GetUserByEmail(database *mgo.Database, email string) (user *User) {
+  err := database.C("users").Find(bson.M{"e": email}).One(&user)
+
+  if err != nil {
+    log.Println("Can't get user by email :", err)
+  }
+  return
+}
+
+func InsertUser(database *mgo.Database, user *User) error {
+  user.ID = bson.NewObjectId()
+  return database.C("users").Insert(user)
+}
+      </code>
+    </pre>
   </div>
 </body>
 </html>

@@ -2,7 +2,7 @@
     "secret": "secret",
     "database": {
         "hosts": "localhost",
-        "database": "defaultproject"
+        "database": "webapp-goji"
     },
     "public_path": "./assets"
 }

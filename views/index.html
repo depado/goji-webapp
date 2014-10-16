@@ -63,5 +63,15 @@ func InsertUser(database *mgo.Database, user *User) error {
       </code>
     </pre>
   </div>
+  {{ range .}}
+  <div class="ui raised segment">
+    <div class="ui teal ribbon label">{{ .Title }}</div>
+    <p>{{ .Content }}</p>
+    <div class="metadata">
+      <span class="date">{{ .Posted }}</span>
+    </div>
+  </div>
+  {{ end }}
+  </div>
 </body>
 </html>

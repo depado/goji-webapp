@@ -5,11 +5,11 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/zenazn/goji"
 	"github.com/zenazn/goji/graceful"
 	gojiweb "github.com/zenazn/goji/web"
+
 	"labix.org/v2/mgo"
 
 	//"github.com/depado/webapp-goji/controllers"
@@ -18,22 +18,14 @@ import (
 )
 
 func GetHello(c gojiweb.C, w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("views/index.html")
-	dbName := c.Env["DBName"]
-	log.Println("DB Name :", dbName)
-	user := models.User{
-		Email:     "depado@depado.eu",
-		Username:  "Depado",
-		Timestamp: time.Now(),
-	}
-	user.HashPassword("pony")
 	database := c.Env["DBSession"].(*mgo.Session).DB(c.Env["DBName"].(string))
-	if err := models.InsertUser(database, &user); err != nil {
-		log.Fatal("Could not insert")
+	allEntries, err := models.AllEntries(database)
+	if err != nil {
+		log.Fatalf("Could not retrieve Entries : %v", err)
 		panic(err)
 	}
-
-	t.Execute(w, nil)
+	t, _ := template.ParseFiles("views/index.html")
+	t.Execute(w, allEntries)
 }
 
 func main() {
@@ -42,6 +34,7 @@ func main() {
 
 	var application = &system.Application{}
 
+	// Initialize the application and connect to database
 	application.Init(filename)
 	application.ConnectToDatabase()
 

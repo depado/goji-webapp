@@ -2,31 +2,15 @@ package main
 
 import (
 	"flag"
-	"html/template"
-	"log"
 	"net/http"
 
 	"github.com/zenazn/goji"
 	"github.com/zenazn/goji/graceful"
-	gojiweb "github.com/zenazn/goji/web"
+	"github.com/zenazn/goji/web"
 
-	"labix.org/v2/mgo"
-
-	//"github.com/depado/webapp-goji/controllers"
-	"github.com/depado/webapp-goji/models"
+	"github.com/depado/webapp-goji/controllers"
 	"github.com/depado/webapp-goji/system"
 )
-
-func GetHello(c gojiweb.C, w http.ResponseWriter, r *http.Request) {
-	database := c.Env["DBSession"].(*mgo.Session).DB(c.Env["DBName"].(string))
-	allEntries, err := models.AllEntries(database)
-	if err != nil {
-		log.Fatalf("Could not retrieve Entries : %v", err)
-		panic(err)
-	}
-	t, _ := template.ParseFiles("views/index.html")
-	t.Execute(w, allEntries)
-}
 
 func main() {
 	filename := flag.String("config", "config.json", "Path to configuration file")
@@ -39,7 +23,7 @@ func main() {
 	application.ConnectToDatabase()
 
 	// Setup Static Files
-	static := gojiweb.New()
+	static := web.New()
 	static.Get("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir(application.Configuration.PublicPath))))
 	http.Handle("/static/", static)
 
@@ -47,7 +31,10 @@ func main() {
 	goji.Use(application.ApplyDatabase)
 
 	// Setup Routes
-	goji.Get("/", GetHello)
+	goji.Get("/", controllers.GetIndex)
+	goji.Get("/entries/", controllers.GetEntries)
+	goji.Get("/entries", http.RedirectHandler("/entries/", 301))
+	goji.Get("/entries/:id/", controllers.GetEntry)
 
 	// PostHook Declaration
 	graceful.PostHook(func() {

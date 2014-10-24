@@ -11,7 +11,9 @@ type (
 	Entries []Entry
 	Entry   struct {
 		ID      bson.ObjectId `bson:"_id,omitempty"`
+		Author  string        `bson:"author"`
 		Title   string        `bson:"title"`
+		Short   string        `bson:"short"`
 		Content string        `bson:"content"`
 		Posted  time.Time     `bson:"posted"`
 	}
@@ -36,12 +38,13 @@ func AllEntries(database *mgo.Database) (entries Entries, err error) {
 	return
 }
 
-// Retrive all the entries sorted by date.
+// Retrieve all the entries sorted by date.
 func AllEntriesByDate(database *mgo.Database) (entries Entries, err error) {
 	err = database.C("entries").Find(nil).Sort("-posted").All(&entries)
 	return
 }
 
+// Counts all the entries.
 func CountAllEntries(database *mgo.Database) (count int, err error) {
 	count, err = database.C("entries").Find(nil).Count()
 	return

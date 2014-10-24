@@ -1,0 +1,25 @@
+{{ define "menu" }}
+<div class="ui fixed vertical menu">
+  <a class='item {{ if eq .Base.Active "home"}}active green{{ end }}' href="/">
+    Home
+  </a>
+  {{ if eq .Base.Active "entries" "entry" "new" }}
+  <div class='active teal item'>
+    Articles
+    <div class="ui label">{{ .Base.Count }}</div>
+    <div class="menu">
+      <a class='item {{ if eq .Base.Active "entries" }}active teal{{ end }}' href="/entries/">All</a>
+      <a class='item {{ if eq .Base.Active "new" }}active teal{{ end }}' href="/entries/new/">New</a>
+      <div class="item">
+        <div class="ui small icon input">
+          <input placeholder="Search Article" type="text">
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ else }}
+  <a class="ui item teal" href="/entries/">Articles<div class="ui label">{{ .Base.Count }}</div></a>
+  {{ end }}
+</div>
+{{ end }}

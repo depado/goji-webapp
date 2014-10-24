@@ -1,0 +1,30 @@
+{{ define "content" }}
+<form method="post" action="/entries/new/" class="ui form segment">
+  <div class="field">
+    <label>Author</label>
+    <div class="ui left labeled icon input">
+      <input name="author" type="text">
+      <i class="user icon"></i>
+    </div>
+  </div>
+  <div class="field">
+    <label>Title</label>
+    <div class="ui left labeled icon input">
+      <input name="title" type="text">
+      <i class="text file outline icon"></i>
+    </div>
+  </div>
+  <div class="field">
+    <label>Short Description</label>
+    <div class="ui left labeled icon input">
+      <input type="text" name="short">
+      <i class="text file icon"></i>
+    </div>
+  </div>
+  <div class="field">
+    <label>Content</label>
+    <textarea name="content"></textarea>
+  </div>
+  <button type="submit" class="ui blue submit button">Post</button>
+</form>
+{{ end }}

@@ -1,0 +1,11 @@
+{{ define "content" }}
+{{ range .Entries }}
+<div class="ui raised segment">
+  <div class="ui teal ribbon label">
+    <a href="{{ .ID.Hex }}/">{{ .Title }}</a>
+  </div>
+  <p>{{ .Short }}</p>
+  <span class="date">{{ .Posted }}{{ if .Author }} by {{ .Author }}{{ end }}</span>
+</div>
+{{ end }}
+{{ end }}

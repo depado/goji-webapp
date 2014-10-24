@@ -34,6 +34,9 @@ func main() {
 	goji.Get("/", controllers.GetIndex)
 	goji.Get("/entries/", controllers.GetEntries)
 	goji.Get("/entries", http.RedirectHandler("/entries/", 301))
+	goji.Get("/entries/new/", controllers.GetNewEntry)
+	goji.Get("/entries/new", http.RedirectHandler("/entries/new/", 301))
+	goji.Post("/entries/new/", controllers.PostNewEntry)
 	goji.Get("/entries/:id/", controllers.GetEntry)
 
 	// PostHook Declaration

@@ -22,6 +22,7 @@ func GetEntries(c web.C, w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Could not retrieve Entries : %v", err)
 		panic(err)
 	}
+	allEntries = helpers.SanitizeEntries(allEntries)
 	context := helpers.GenerateEntriesContext("entries", allEntries)
 	t, _ := template.ParseFiles("views/base.html", "views/menu.html", "views/entries.html")
 	t.ExecuteTemplate(w, "base", context)
@@ -45,6 +46,7 @@ func GetEntry(c web.C, w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Could not count Entries : %v", err)
 		panic(err)
 	}
+	entry = helpers.SanitizeEntry(entry)
 	context := helpers.GenerateEntryContext("entry", entry, count)
 	t, _ := template.ParseFiles("views/base.html", "views/menu.html", "views/entry.html")
 	t.ExecuteTemplate(w, "base", context)
@@ -61,8 +63,8 @@ func GetNewEntry(c web.C, w http.ResponseWriter, r *http.Request) {
 func PostNewEntry(c web.C, w http.ResponseWriter, r *http.Request) {
 	database := helpers.GetDatabaseFromEnv(c)
 	author, title := r.FormValue("author"), r.FormValue("title")
-	short, content := r.FormValue("short"), r.FormValue("content")
-	if helpers.EmptyStrings(author, title, short, content) {
+	short, content := r.FormValue("short"), template.HTML(r.FormValue("content"))
+	if helpers.EmptyStrings(author, title, short, string(content)) {
 		http.Redirect(w, r, "/entries/new/", 301)
 		return
 	}

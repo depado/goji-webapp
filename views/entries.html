@@ -4,7 +4,7 @@
   <div class="ui teal ribbon label">
     <a href="{{ .ID.Hex }}/">{{ .Title }}</a>
   </div>
-  <p>{{ .Short }}</p>
+  <p style="word-break: break-all;">{{ .Short }}</p>
   <span class="date">{{ .Posted }}{{ if .Author }} by {{ .Author }}{{ end }}</span>
 </div>
 {{ end }}

@@ -1,7 +1,7 @@
 {{define "content"}}
 <div class="ui raised segment">
   <div class="ui teal ribbon label">{{ .Entry.Title }}</div>
-  <p>{{ .Entry.Content }}</p>
+  <p style="word-break: break-all;">{{ .Entry.Content }}</p>
   <div class="metadata">
     <span class="date">{{ .Entry.Posted }} by {{ .Entry.Author }}</span>
   </div>

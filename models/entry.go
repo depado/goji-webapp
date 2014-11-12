@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"html/template"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 )
@@ -14,7 +15,7 @@ type (
 		Author  string        `bson:"author"`
 		Title   string        `bson:"title"`
 		Short   string        `bson:"short"`
-		Content string        `bson:"content"`
+		Content template.HTML `bson:"content"`
 		Posted  time.Time     `bson:"posted"`
 	}
 )
